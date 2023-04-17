@@ -1,4 +1,10 @@
-export const propertyReferralsInfo = [
+export interface IReferralsPropery  {
+  title:string;
+  percentage:number;
+  color:string;
+}
+
+export const propertyReferralsInfo:Array<IReferralsPropery> = [
     {
       title: 'Social Media',
       percentage: 64,

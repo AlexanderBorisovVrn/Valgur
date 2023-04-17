@@ -27,7 +27,7 @@ export const TotalRevenueOptions: ApexOptions = {
     },
   },
   dataLabels: {
-    enabled: false,
+    enabled:false,
   },
   grid: {
     show: false,

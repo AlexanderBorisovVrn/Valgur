@@ -34,6 +34,8 @@ import {
   useRefineContext,
 } from "@pankod/refine-core";
 
+
+
 import { Title as DefaultTitle } from "../title";
 
 export const Sider: typeof DefaultSider = ({ render }) => {
@@ -184,11 +186,11 @@ export const Sider: typeof DefaultSider = ({ render }) => {
                 "&.Mui-selected": {
                   "&:hover": {
                     backgroundColor: isSelected
-                      ? '#1e36e8'
+                      ? '#1f75fe'
                       : 'transparent'
                   },
                   backgroundColor: isSelected
-                    ? '475be8'
+                    ? '#475be8'
                     : "transparent",
                 },
                 justifyContent: "center",
@@ -202,7 +204,7 @@ export const Sider: typeof DefaultSider = ({ render }) => {
                 sx={{
                   justifyContent: "center",
                   minWidth: 36,
-                  color: "primary.contrastText",
+                  color: isSelected?'white':'gray'
                 }}
               >
                 {icon ?? <ListOutlined />}
@@ -213,6 +215,7 @@ export const Sider: typeof DefaultSider = ({ render }) => {
                   noWrap: true,
                   fontSize: "16px",
                   fontWeight: isSelected ? "bold" : "normal",
+                  color:isSelected?'white':'gray'
                 }}
               />
             </ListItemButton>
@@ -253,7 +256,6 @@ export const Sider: typeof DefaultSider = ({ render }) => {
             sx={{
               justifyContent: "center",
               minWidth: 36,
-              color: "primary.contrastText",
             }}
           >
             <Dashboard />
@@ -361,7 +363,7 @@ export const Sider: typeof DefaultSider = ({ render }) => {
             display: { sm: "block", md: "none" },
             "& .MuiDrawer-paper": {
               width: 256,
-              bgcolor: "secondary.main",
+              bgcolor: "#FCFCFC",
             },
           }}
         >
@@ -412,10 +414,14 @@ export const Sider: typeof DefaultSider = ({ render }) => {
           </Box>
           <Button
             sx={{
-              background: "#475BE8",
+             
+              backgroundColor:  '#475be8',
+              "&:hover": {
+                backgroundColor:' #1f75fe'
+              },
               color: "primary.contrastText",
               textAlign: "center",
-              borderRadius: 0,
+              borderRadius: 1,
               borderTop: "1px solid #ffffff1a",
             }}
             fullWidth
@@ -438,7 +444,7 @@ export const Sider: typeof DefaultSider = ({ render }) => {
           }}
         >
           <IconButton
-            sx={{ color: "#fff", width: "36px" }}
+            sx={{ color: "balck", width: "36px" }}
             onClick={() => setOpened((prev) => !prev)}
           >
             <MenuRounded />

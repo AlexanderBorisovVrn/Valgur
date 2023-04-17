@@ -1,6 +1,4 @@
-import React from "react";
-
-import { Refine,AuthProvider } from "@pankod/refine-core";
+import { Refine, AuthProvider } from "@pankod/refine-core";
 import {
   notificationProvider,
   RefineSnackbarProvider,
@@ -19,6 +17,8 @@ import { Title, Sider, Layout, Header } from "components/layout";
 import { Login } from "pages/login";
 import { CredentialResponse } from "interfaces/google";
 import { parseJwt } from "utils/parse-jwt";
+import { AccountCircleOutlined, ChatBubbleOutline, PeopleAltOutlined, StarOutlineRounded } from "@mui/icons-material";
+import { Home } from "pages/home";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((request: AxiosRequestConfig) => {
@@ -99,13 +99,36 @@ function App() {
             catchAll={<ErrorComponent />}
             resources={[
               {
-                name: "posts",
-                list: MuiInferencer,
-                edit: MuiInferencer,
-                show: MuiInferencer,
-                create: MuiInferencer,
-                canDelete: true,
+                name: "property",
+                list: AllProperties,
+                show:PropertyDetails,
+                create:CreateProperty,
+                edit:EditProperty
               },
+              {
+                name: "agent",
+                list: Agents,
+                show:AgentsProfile,
+                icon: <PeopleAltOutlined/>
+              },
+              {
+                name: "review",
+                list: Home,
+                icon: <StarOutlineRounded />
+              },
+              {
+                name: "message",
+                list: Home,
+                icon: <ChatBubbleOutline />
+              },
+              {
+                name: "my-profile",
+                options: {
+                  label: 'My Profile'
+                },
+                list: MyProfile,
+                icon: <AccountCircleOutlined />
+              }
             ]}
             Title={Title}
             Sider={Sider}
@@ -114,6 +137,7 @@ function App() {
             routerProvider={routerProvider}
             authProvider={authProvider}
             LoginPage={Login}
+            DashboardPage={Home}
           />
         </RefineSnackbarProvider>
       </ColorModeContextProvider>
