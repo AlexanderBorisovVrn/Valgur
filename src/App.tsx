@@ -14,11 +14,13 @@ import routerProvider from "@pankod/refine-react-router-v6";
 import axios, { AxiosRequestConfig } from "axios";
 import { ColorModeContextProvider } from "contexts";
 import { Title, Sider, Layout, Header } from "components/layout";
-import { Login } from "pages/login";
 import { CredentialResponse } from "interfaces/google";
 import { parseJwt } from "utils/parse-jwt";
 import { AccountCircleOutlined, ChatBubbleOutline, PeopleAltOutlined, StarOutlineRounded } from "@mui/icons-material";
-import { Home } from "pages/home";
+import Pages from 'pages'
+const { Home, Agents, AgentsProfile, AllProperties, CreateProperty, EditProperty, Login, MyProfile, PropertyDetails } = Pages;
+
+
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((request: AxiosRequestConfig) => {
@@ -99,25 +101,25 @@ function App() {
             catchAll={<ErrorComponent />}
             resources={[
               {
-                name: "property",
+                name: "properties",
                 list: AllProperties,
-                show:PropertyDetails,
-                create:CreateProperty,
-                edit:EditProperty
+                show: PropertyDetails,
+                create: CreateProperty,
+                edit: EditProperty
               },
               {
-                name: "agent",
+                name: "agents",
                 list: Agents,
-                show:AgentsProfile,
-                icon: <PeopleAltOutlined/>
+                show: AgentsProfile,
+                icon: <PeopleAltOutlined />
               },
               {
-                name: "review",
+                name: "reviews",
                 list: Home,
                 icon: <StarOutlineRounded />
               },
               {
-                name: "message",
+                name: "messages",
                 list: Home,
                 icon: <ChatBubbleOutline />
               },
