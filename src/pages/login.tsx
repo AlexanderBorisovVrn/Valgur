@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useLogin } from "@pankod/refine-core";
-import { Container, Box } from "@pankod/refine-mui";
+import { Container, Box, Stack, Typography } from "@pankod/refine-mui";
 import { CredentialResponse } from "../interfaces/google";
 console.log(process.env.AI_KEY)
 
@@ -27,7 +27,7 @@ export const Login: React.FC = () => {
         });
         window.google.accounts.id.renderButton(divRef.current, {
           theme: "filled_blue",
-          size: "medium",
+          size: "large",
           type: "standard",
         });
       } catch (error) {
@@ -42,7 +42,7 @@ export const Login: React.FC = () => {
     <Box
       component="div"
       sx={{
-        backgroundColor:'#FCFCFC'
+        backgroundColor: '#FCFCFC'
       }}
     >
       <Container
@@ -63,10 +63,23 @@ export const Login: React.FC = () => {
             alignItems: "center",
           }}
         >
-         
-          <Box mt={4}>
+
+          <Stack
+          direction='column'
+          alignItems='center'
+          mt={4}>
+            <Box
+              sx={{
+                width: "400px",
+                height: "400px",
+                opacity:'0.7',
+                filter:'blur(1px)'
+              }}
+            >
+              <img src='valgur.svg' alt="VALGUR" style={{ width: '100%', height: 'auto' }} />
+            </Box>
             <GoogleButton />
-          </Box>
+          </Stack>
         </Box>
       </Container>
     </Box>

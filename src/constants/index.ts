@@ -31,3 +31,5 @@ export const propertyReferralsInfo:Array<IReferralsPropery> = [
       color: '#F45252',
     },
   ];
+
+ 

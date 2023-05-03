@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
-import {useForm} from '@pankod/refine-react-hook-form'
+import {FieldValues, useForm} from '@pankod/refine-react-hook-form'
 import { PropertyImageProps } from "./properties";
-const { refineCore:{onFinish,formLoading},register,handleSubmit} = useForm();
+const { refineCore:{onFinish},register,handleSubmit} = useForm();
 
 export type CustomButtonProps = {
     type?:string;
@@ -17,9 +17,9 @@ export interface IForm{
     type:'Create' | 'Edit';
     register:typeof register;
     onFinish:typeof onFinish;
-    formLoading:typeof formLoading;
+    formLoading:boolean;
     handleSubmit:typeof handleSubmit;
-    handleImageChange?:()=>void;
-    onFinishHandler:()=>void
+    handleImageChange:(file:File)=>void;
+    onFinishHandler:(data:FieldValues)=>void
     propertyImage?:PropertyImageProps
 }
