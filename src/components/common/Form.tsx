@@ -118,7 +118,7 @@ const Form: FC<IForm> = ({ type, formLoading, handleImageChange, handleSubmit, o
             <FormHelperText
               sx={{ fontWeight: 500, margin: '10px 0', fontSize: 16, color: '#11124d' }}
             >
-              Enter property name
+              Enter Location
             </FormHelperText>
             <TextField
               fullWidth

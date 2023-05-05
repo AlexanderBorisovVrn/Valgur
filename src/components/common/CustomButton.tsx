@@ -3,8 +3,10 @@ import { CustomButtonProps } from 'interfaces/components';
 
 
 const CustomButton = ({ type, title, backgroundColor, color, fullWidth, icon, handleClick }: CustomButtonProps) => {
+ 
   return (
     <Button
+    type ={'submit'?'submit':'button'}
     sx={{
       flex:fullWidth?1 : 'unset',
       padding:'10px 15px',
@@ -16,7 +18,7 @@ const CustomButton = ({ type, title, backgroundColor, color, fullWidth, icon, ha
       fontWeight:600,
       gap:'10px',
       textTransform:'capitalize',
-      '&hover':{
+      '&:hover':{
         opacity:0.9,
         backgroundColor
       }
