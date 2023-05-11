@@ -1,13 +1,15 @@
 import { Button } from '@pankod/refine-mui';
+import React from 'react'
 import { CustomButtonProps } from 'interfaces/components';
 
 
-const CustomButton = ({ type, title, backgroundColor, color, fullWidth, icon, handleClick }: CustomButtonProps) => {
+const CustomButton = ({ type, title, backgroundColor, color, fullWidth, icon, handleClick,style={}}: CustomButtonProps) => {
  
   return (
     <Button
-    type ={'submit'?'submit':'button'}
+    type ={type === 'submit'?'submit':'button'}
     sx={{
+      ...style,
       flex:fullWidth?1 : 'unset',
       padding:'10px 15px',
       width:fullWidth?'100%' : 'fit-content',

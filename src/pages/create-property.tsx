@@ -5,6 +5,13 @@ import { useNavigate } from "@pankod/refine-react-router-v6";
 import compression from "browser-image-compression";
 import Form from "components/common/Form";
 import { PropertyImageProps } from "interfaces/properties";
+import { TFile } from "interfaces/components";
+
+const imgCompressOpt = {
+  maxSizeMB: 1,
+  maxWidthOrHeight: 1920,
+  useWebWorker: true,
+};
 
 export const CreateProperty = () => {
   const navigate = useNavigate();
@@ -19,26 +26,21 @@ export const CreateProperty = () => {
     handleSubmit,
   } = useForm();
 
-  const handleImageChange = async (file: File) => {
+  const handleImageChange = (file: TFile) => {
+    if (!file) {
+      setPropertyImage({ name: "", url: "" });
+      return;
+    }
+
     const fileReader = new FileReader();
-    const compressedFile = await compression(file, {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1920,
-      useWebWorker: true,
-    });
-    
-    const reader = new Promise<string>((resolve) => {
-      fileReader.readAsDataURL(compressedFile);
+    compression(file as File, imgCompressOpt).then((compressed) => {
+      fileReader.readAsDataURL(compressed);
       fileReader.onload = () => {
-        console.log(new Blob([fileReader.result as string]).size)
-        resolve(fileReader.result as string);
+        setPropertyImage({
+          name: file?.name,
+          url: fileReader.result as string,
+        });
       };
-    });
-    reader.then((url) => {
-      setPropertyImage({
-        name: file?.name,
-        url,
-      });
     });
   };
 
