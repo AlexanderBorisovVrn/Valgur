@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Add } from "@mui/icons-material";
 import { BaseRecord, HttpError, useTable } from "@pankod/refine-core";
-import { Box, Typography, Stack } from "@pankod/refine-mui";
+import { Box, Typography, Stack, TextField, Select, MenuItem } from "@pankod/refine-mui";
 import { useNavigate } from "@pankod/refine-react-router-v6";
 import { PropertyCard, CustomButton } from "components";
 
@@ -42,19 +42,48 @@ export const AllProperties: FC = () => {
   return (
     <Box>
       <Box
-      sx={{
-        display:'flex',
-        flexWrap:'wrap',
-        gap:3
-      }}
-      mt={2}
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 3,
+        }}
+        mt={2}
       >
-        <Stack></Stack>
+        <Stack direction="column" width="100%">
+          <Typography fontSize={25} fontWeight={700} color="#11142d">
+            {renderAllProperties.length
+              ? "All Properties"
+              : "There are no propertiesF"}
+          </Typography>
+          <Box my={2} display="flex" width="85%" gap={2} flexWrap="wrap">
+            <CustomButton
+              title="Sort By Price"
+              color="#fcfcfc"
+              backgroundColor="#475be8"
+            />
+            <TextField
+              variant="outlined"
+              placeholder="Search by Title"
+              color="info"
+              value=""
+              onChange={(e) => {}}
+            />
+            <Select
+            variant='outlined'
+            color='info'
+            displayEmpty
+            inputProps={{'aria-label':'Without-label'}}
+            required
+            onChange={(e)=>{}}
+            defaultValue=''
+            value=""
+            >
+              <MenuItem value=''>All</MenuItem>
+            </Select>
+          </Box>
+        </Stack>
       </Box>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Typography fontSize={25} fontWeight={700} color="#11142d">
-          All Properties
-        </Typography>
         <CustomButton
           title="Add Property"
           handleClick={() => navigate("/properties/create")}
