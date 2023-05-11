@@ -19,7 +19,8 @@ export interface CustomButtonProps {
   style?: CSSProperties;
 }
 
-export type TFile = File | null
+export type FileType = File | null
+
 
 export interface IForm {
   type: "Create" | "Edit";
@@ -27,7 +28,7 @@ export interface IForm {
   onFinish: typeof onFinish;
   formLoading: boolean;
   handleSubmit: typeof handleSubmit;
-  handleImageChange: (file: TFile) => void;
+  handleImageChange: (file: FileType) => void;
   onFinishHandler: (data: FieldValues) => void;
   propertyImage: T extends PropertyImageProps ? PropertyImageProps : undefined;
 }

@@ -5,7 +5,7 @@ import { useNavigate } from "@pankod/refine-react-router-v6";
 import compression from "browser-image-compression";
 import Form from "components/common/Form";
 import { PropertyImageProps } from "interfaces/properties";
-import { TFile } from "interfaces/components";
+import { FileType } from "interfaces/components";
 
 const imgCompressOpt = {
   maxSizeMB: 1,
@@ -26,7 +26,7 @@ export const CreateProperty = () => {
     handleSubmit,
   } = useForm();
 
-  const handleImageChange = (file: TFile) => {
+  const handleImageChange = (file: FileType) => {
     if (!file) {
       setPropertyImage({ name: "", url: "" });
       return;

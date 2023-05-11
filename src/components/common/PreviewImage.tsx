@@ -34,7 +34,7 @@ export const PreviewImage: React.FC<IClosePrevImage> = ({
       <Button
         type="button"
         title="Close"
-       
+        onClick={()=>cb(null)}
         sx={{
           position: "absolute",
           padding:0,
