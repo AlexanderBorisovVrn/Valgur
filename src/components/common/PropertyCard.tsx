@@ -23,7 +23,7 @@ const PropertyCard = ({
   photo,
 }: IProperty) => {
   return (
-    <Link to={`/properties/${id}`} style={{ textDecoration: "none" }}>
+    <Link to={`/properties/show/${id}`} style={{ textDecoration: "none" }}>
       <Card
         sx={{
           width:'320px',

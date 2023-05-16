@@ -3,7 +3,7 @@ import React from 'react'
 import { CustomButtonProps } from 'interfaces/components';
 
 
-const CustomButton = ({ type, title, backgroundColor, color, fullWidth, icon, handleClick,style={}}: CustomButtonProps) => {
+const CustomButton = ({disabled, type, title, backgroundColor, color, fullWidth, icon, handleClick,style={}}: CustomButtonProps) => {
  
   return (
     <Button
@@ -25,6 +25,7 @@ const CustomButton = ({ type, title, backgroundColor, color, fullWidth, icon, ha
         backgroundColor
       }
     }}
+    disabled={disabled?true:false}
     onClick={handleClick}
     >
       {icon}

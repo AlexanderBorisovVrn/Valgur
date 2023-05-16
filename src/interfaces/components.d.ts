@@ -17,6 +17,7 @@ export interface CustomButtonProps {
   icon?: ReactNode;
   fullWidth?: boolean;
   style?: CSSProperties;
+  disabled?:boolean
 }
 
 export type FileType = File | null
