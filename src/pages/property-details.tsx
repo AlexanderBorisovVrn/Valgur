@@ -27,7 +27,9 @@ export const PropertyDetails: React.FC = () => {
   }
 
   const handleDeleteProperty = () => {
-    const response = confirm("Are you shure you want to delete this property?");
+    const response = window.confirm(
+      "Are you shure you want to delete this property?"
+    );
 
     if (response) {
       mutate(
@@ -40,6 +42,10 @@ export const PropertyDetails: React.FC = () => {
       );
     }
   };
+
+  const handleEditProperty = ()=>{
+    navigate('/properties/edit/'+id)
+  }
   const propertyDetails = data?.data ?? {};
 
   return (
@@ -65,7 +71,7 @@ export const PropertyDetails: React.FC = () => {
           justifyContent="flex-start"
           alignItems="flex-start"
           borderRadius="10px"
-          padding={{ xs: "25px 20px", lg: "15px 10px" }}
+          padding={{ xs: "0 20px", lg: "0 10px" }}
           width={{ xs: "100%", lg: "50%" }}
         >
           <Typography variant="h2" fontWeight={700} color="#11142d">
@@ -123,11 +129,13 @@ export const PropertyDetails: React.FC = () => {
               color="#fcfcfc"
               title="Edit"
               backgroundColor="#475be8"
+              handleClick={handleEditProperty}
             />
             <CustomButton
               color="#fcfcfc"
               title="Delete"
               backgroundColor="#da1e28"
+              handleClick={handleDeleteProperty}  
             />
           </Stack>
         </Stack>

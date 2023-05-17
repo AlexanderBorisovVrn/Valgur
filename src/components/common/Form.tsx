@@ -111,7 +111,7 @@ const Form: FC<IForm> = ({
                 inputProps={{
                   "aria-label": "Without label",
                 }}
-                defaultValue="Apartment"
+                defaultValue="apartment"
                 {...register("propertyType", {
                   required: true,
                 })}
