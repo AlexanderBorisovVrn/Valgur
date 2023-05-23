@@ -127,30 +127,30 @@ const Form: FC<IForm> = ({
               </Select>
             </FormControl>
 
-            <FormControl>
-              <FormHelperText
-                sx={{
-                  fontWeight: 500,
-                  margin: "10px 0",
-                  fontSize: 16,
-                  color: "#11124d",
-                }}
-              >
-                Enter property price
-              </FormHelperText>
-              <TextField
-                fullWidth
-                required
-                type="number"
-                id="outlined-basic"
-                color="info"
-                variant="outlined"
-                autoComplete="hello"
-                {...register("price", {
-                  required: true,
-                })}
-              />
-            </FormControl>
+              <FormControl>
+                <FormHelperText
+                  sx={{
+                    fontWeight: 500,
+                    margin: "10px 0",
+                    fontSize: 16,
+                    color: "#11124d",
+                  }}
+                >
+                  Enter property price
+                </FormHelperText>
+                <TextField
+                  fullWidth
+                  required
+                  type="number"
+                  id="outlined-basic"
+                  color="info"
+                  variant="outlined"
+                  autoComplete="hello"
+                  {...register("price", {
+                    required: true,
+                  })}
+                />
+              </FormControl>
           </Stack>
           <FormControl>
             <FormHelperText

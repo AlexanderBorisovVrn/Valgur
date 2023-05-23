@@ -2,6 +2,8 @@
 import Profile from "./common/Profile";
 import PropertyCard from "./common/PropertyCard";
 import CustomButton from "./common/CustomButton";
+import SignUp from "./common/SignUp";
+
 
 //charts
 import PieChart from "./layout/charts/PieChart";
@@ -10,7 +12,6 @@ import TotalRevenue from "./layout/charts/TotalRevenue";
 
 //agent
 import AgentCard from "./agent/AgentCard";
-
 //home
 import TopAgent from "./agent/TopAgent";
 
@@ -26,5 +27,7 @@ export {
 
     AgentCard,
 
-    TopAgent
+    TopAgent,
 }
+
+export default SignUp;

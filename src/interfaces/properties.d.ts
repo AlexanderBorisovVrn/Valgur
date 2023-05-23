@@ -19,11 +19,11 @@ enum Properties {
 type PropertyType = `${Properties}`;
 
 export interface IProperty extends BaseRecord{
-  creator:string;
-  location: string;
-  photo:string;
-  price: number;
-  description: string;
-  propertyType: PropertyType;
+  creator?:string;
+  location?: string;
+  photo?:string;
+  price?: number;
+  description?: string;
+  propertyType?: PropertyType;
   title:string;
 }

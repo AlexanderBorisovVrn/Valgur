@@ -1,4 +1,4 @@
-import { Refine, AuthProvider } from "@pankod/refine-core";
+import { Refine, AuthProvider, Authenticated } from "@pankod/refine-core";
 import {
   notificationProvider,
   RefineSnackbarProvider,
@@ -6,20 +6,39 @@ import {
   GlobalStyles,
   ReadyPage,
   ErrorComponent,
+  AuthPage,
 } from "@pankod/refine-mui";
 
 import dataProvider from "@pankod/refine-simple-rest";
-import routerProvider from "@pankod/refine-react-router-v6";
+import routerProvider, {
+  BrowserRouter,
+  Outlet,
+  Route,
+  Routes,
+} from "@pankod/refine-react-router-v6";
 import axios, { AxiosRequestConfig } from "axios";
 import { ColorModeContextProvider } from "contexts";
 import { Title, Sider, Layout, Header } from "components/layout";
-import { CredentialResponse } from "interfaces/google";
+import { CredentialResponse } from "interfaces/auth";
 import { parseJwt } from "utils/parse-jwt";
-import { AccountCircleOutlined, ChatBubbleOutline, PeopleAltOutlined, StarOutlineRounded } from "@mui/icons-material";
-import Pages from 'pages'
-const { Home, Agents, AgentsProfile, AllProperties, CreateProperty, EditProperty, Login, MyProfile, PropertyDetails } = Pages;
-
-
+import {
+  AccountCircleOutlined,
+  ChatBubbleOutline,
+  PeopleAltOutlined,
+  StarOutlineRounded,
+} from "@mui/icons-material";
+import Pages from "pages";
+const {
+  Home,
+  Agents,
+  AgentProfile,
+  AllProperties,
+  CreateProperty,
+  EditProperty,
+  Login,
+  MyProfile,
+  PropertyDetails,
+} = Pages;
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((request: AxiosRequestConfig) => {
@@ -37,37 +56,56 @@ axiosInstance.interceptors.request.use((request: AxiosRequestConfig) => {
 
 function App() {
   const authProvider: AuthProvider = {
-    login: async ({ credential }: CredentialResponse) => {
-      const profileObj = credential ? parseJwt(credential) : null;
-      if (profileObj) {
-        const response = await fetch('http://localhost:8090/api/v1/users', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: profileObj.name,
-            email: profileObj.email,
-            avatar: profileObj.picture
-          })
+    login: async ({ credential}: CredentialResponse) => {
+      if (typeof credential !== "string") {
+        fetch("http://localhost:8090/api/v1/users/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(credential),
         })
-        const data = await response.json();
-        if (data.status === 200) {
-          localStorage.setItem(
-            "user",
-            JSON.stringify({
-              ...profileObj,
+          .then((res) => {
+            if (res.status !== 200) {
+              throw res.status;
+            } else {
+              return res.json();
+            }
+          })
+          .then((user) => {
+            localStorage.setItem(
+              "user",
+              JSON.stringify(user)
+            );
+            localStorage.setItem("token", user.accessToken);
+          })
+          .catch((e) => console.log("Response status " + e + ". User exists"));
+      } else {
+        const profileObj = credential ? parseJwt(credential) : null;
+        if (profileObj) {
+          const response = await fetch("http://localhost:8090/api/v1/users", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: profileObj.name,
+              email: profileObj.email,
               avatar: profileObj.picture,
+            }),
+          });
 
-            })
-          );
-        }else{
-          return Promise.reject()
+          if (response.status === 200) {
+            const data = await response.json();
+            localStorage.setItem("user", JSON.stringify(data));
+          } else {
+            return Promise.reject();
+          }
         }
-
+        localStorage.setItem("token", `${credential}`);
       }
-      localStorage.setItem("token", `${credential}`);
+
       return Promise.resolve();
     },
-    
+
     logout: () => {
       const token = localStorage.getItem("token");
 
@@ -118,32 +156,32 @@ function App() {
                 list: AllProperties,
                 show: PropertyDetails,
                 create: CreateProperty,
-                edit: EditProperty
+                edit: EditProperty,
               },
               {
                 name: "agents",
                 list: Agents,
-                show: AgentsProfile,
-                icon: <PeopleAltOutlined />
+                show: AgentProfile,
+                icon: <PeopleAltOutlined />,
               },
-              {
-                name: "reviews",
-                list: Home,
-                icon: <StarOutlineRounded />
-              },
-              {
-                name: "messages",
-                list: Home,
-                icon: <ChatBubbleOutline />
-              },
+              // {
+              //   name: "reviews",
+              //   list: Home,
+              //   icon: <StarOutlineRounded />,
+              // },
+              // {
+              //   name: "messages",
+              //   list: Home,
+              //   icon: <ChatBubbleOutline />,
+              // },
               {
                 name: "my-profile",
                 options: {
-                  label: 'My Profile'
+                  label: "My Profile",
                 },
                 list: MyProfile,
-                icon: <AccountCircleOutlined />
-              }
+                icon: <AccountCircleOutlined />,
+              },
             ]}
             Title={Title}
             Sider={Sider}

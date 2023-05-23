@@ -17,10 +17,11 @@ const InfoBar = ({ icon, name }: IInfoBarProp) => (
         flex={1}
         minWidth={{ xs: "100%", sm: 300 }}
         gap={1.5}
+        padding='0 5px'
         direction="row"
     >
         {icon}
-        <Typography fontSize={14} color="#808191">
+        <Typography fontSize={14} color="#808191"   >
             {name}
         </Typography>
     </Stack>
@@ -47,14 +48,16 @@ const AgentCard = ({
         <Box
             component={Link}
             to={generateLink()}
-            width="100%"
             sx={{
                 display: "flex",
+                gap:'10px',
+                width:{xs:'calc(100% - 30px)',sm:'calc(50% - 45px)',xl:'calc(33.333% - 75px)'},
+                padding:'15px',
                 flexDirection: { xs: "column", sm: "row" },
-                gap: "20px",
-                padding: "20px",
+                flexGrow:1,
+                textDecoration:'none',
                 "&:hover": {
-                    boxShadow: "0 22px 45px 2px rgba(176,176,176,0.1)",
+                    boxShadow: "0 22px 45px 2px rgba(176, 176, 176, 0.295)",
                 },
             }}
         >
@@ -81,7 +84,7 @@ const AgentCard = ({
                     flexWrap="wrap"
                     alignItems="center"
                 >
-                    <Typography fontSize={22} fontWeight={600} color="#11142d">
+                    <Typography  fontSize={22} fontWeight={600} color="#11142d">
                         {name}
                     </Typography>
                     <Typography fontSize={14} color="#808191">
@@ -96,7 +99,7 @@ const AgentCard = ({
                     gap={2}
                 >
                     <InfoBar
-                        icon={<EmailOutlined sx={{ color: "#808191" }} />}
+                        icon={<EmailOutlined sx={{ color: "#808191",}} />}
                         name={email}
                     />
                     <InfoBar

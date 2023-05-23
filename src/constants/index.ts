@@ -32,4 +32,4 @@ export const propertyReferralsInfo:Array<IReferralsPropery> = [
     },
   ];
 
- 
+ export const authButtonWidth = 300;

@@ -15,7 +15,7 @@ export interface IdConfiguration {
 }
 
 export interface CredentialResponse {
-  credential?: string;
+  credential?: any;
   select_by?:
     | "auto"
     | "user"
@@ -26,6 +26,7 @@ export interface CredentialResponse {
     | "brn_add_session"
     | "btn_confirm_add_session";
   clientId?: string;
+  redirectPath?:string
 }
 
 export interface GsiButtonConfiguration {
@@ -120,4 +121,11 @@ export interface UserPayload {
   iat: number;
   exp: number;
   jti: string;
+}
+
+export interface ISignUp {
+  email:string,
+  name:string,
+  avatar:sting
+  pass?:string
 }
