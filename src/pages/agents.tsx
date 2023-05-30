@@ -28,6 +28,7 @@ export const Agents = () => {
             email={agent.email}
             avatar={agent.avatar}
             noOfProperties={agent.noOfProperties}
+            key={agent._id}
             />
         ))}
       </Stack>

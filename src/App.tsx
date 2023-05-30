@@ -1,4 +1,5 @@
 import { Refine, AuthProvider, Authenticated } from "@pankod/refine-core";
+import { YMaps } from "@pbe/react-yandex-maps";
 import {
   notificationProvider,
   RefineSnackbarProvider,
@@ -6,8 +7,8 @@ import {
   GlobalStyles,
   ReadyPage,
   ErrorComponent,
-  AuthPage,
 } from "@pankod/refine-mui";
+import { MapSuggest } from "components/common/MapSuggest";
 
 import dataProvider from "@pankod/refine-simple-rest";
 import routerProvider, {
@@ -56,7 +57,7 @@ axiosInstance.interceptors.request.use((request: AxiosRequestConfig) => {
 
 function App() {
   const authProvider: AuthProvider = {
-    login: async ({ credential}: CredentialResponse) => {
+    login: async ({ credential }: CredentialResponse) => {
       if (typeof credential !== "string") {
         fetch("http://localhost:8090/api/v1/users/signup", {
           method: "POST",
@@ -73,10 +74,7 @@ function App() {
             }
           })
           .then((user) => {
-            localStorage.setItem(
-              "user",
-              JSON.stringify(user)
-            );
+            localStorage.setItem("user", JSON.stringify(user));
             localStorage.setItem("token", user.accessToken);
           })
           .catch((e) => console.log("Response status " + e + ". User exists"));
@@ -144,55 +142,57 @@ function App() {
       <ColorModeContextProvider>
         <CssBaseline />
         <GlobalStyles styles={{ html: { WebkitFontSmoothing: "auto" } }} />
-        <RefineSnackbarProvider>
-          <Refine
-            dataProvider={dataProvider("http://localhost:8090/api/v1")}
-            notificationProvider={notificationProvider}
-            ReadyPage={ReadyPage}
-            catchAll={<ErrorComponent />}
-            resources={[
-              {
-                name: "properties",
-                list: AllProperties,
-                show: PropertyDetails,
-                create: CreateProperty,
-                edit: EditProperty,
-              },
-              {
-                name: "agents",
-                list: Agents,
-                show: AgentProfile,
-                icon: <PeopleAltOutlined />,
-              },
-              // {
-              //   name: "reviews",
-              //   list: Home,
-              //   icon: <StarOutlineRounded />,
-              // },
-              // {
-              //   name: "messages",
-              //   list: Home,
-              //   icon: <ChatBubbleOutline />,
-              // },
-              {
-                name: "my-profile",
-                options: {
-                  label: "My Profile",
+        <YMaps>
+          <RefineSnackbarProvider>
+            <Refine
+              dataProvider={dataProvider("http://localhost:8090/api/v1")}
+              notificationProvider={notificationProvider}
+              ReadyPage={ReadyPage}
+              catchAll={<ErrorComponent />}
+              resources={[
+                {
+                  name: "properties",
+                  list: AllProperties,
+                  show: PropertyDetails,
+                  create: CreateProperty,
+                  edit: EditProperty,
                 },
-                list: MyProfile,
-                icon: <AccountCircleOutlined />,
-              },
-            ]}
-            Title={Title}
-            Sider={Sider}
-            Layout={Layout}
-            Header={Header}
-            routerProvider={routerProvider}
-            authProvider={authProvider}
-            LoginPage={Login}
-            DashboardPage={Home}
-          />
-        </RefineSnackbarProvider>
+                {
+                  name: "agents",
+                  list: Agents,
+                  show: AgentProfile,
+                  icon: <PeopleAltOutlined />,
+                },
+                {
+                  name: "reviews",
+                  list: MapSuggest,
+                  icon: <StarOutlineRounded />,
+                },
+                // {
+                //   name: "messages",
+                //   list: Home,
+                //   icon: <ChatBubbleOutline />,
+                // },
+                {
+                  name: "my-profile",
+                  options: {
+                    label: "My Profile",
+                  },
+                  list: MyProfile,
+                  icon: <AccountCircleOutlined />,
+                },
+              ]}
+              Title={Title}
+              Sider={Sider}
+              Layout={Layout}
+              Header={Header}
+              routerProvider={routerProvider}
+              authProvider={authProvider}
+              LoginPage={Login}
+              DashboardPage={Home}
+            />
+          </RefineSnackbarProvider>
+        </YMaps>
       </ColorModeContextProvider>
     </>
   );

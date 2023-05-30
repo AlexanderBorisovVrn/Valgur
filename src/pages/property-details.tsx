@@ -2,9 +2,11 @@ import React from "react";
 import { Typography, Stack, Box, Rating } from "@pankod/refine-mui";
 import { useDelete, useGetIdentity, useShow } from "@pankod/refine-core";
 import { useParams, useNavigate } from "@pankod/refine-react-router-v6";
+import { Map } from "components/common/Map";
+
 import {
   ChatBubble,
-  Delete,
+  Delete,   
   Edit,
   Phone,
   Place,
@@ -43,9 +45,9 @@ export const PropertyDetails: React.FC = () => {
     }
   };
 
-  const handleEditProperty = ()=>{
-    navigate('/properties/edit/'+id)
-  }
+  const handleEditProperty = () => {
+    navigate("/properties/edit/" + id);
+  };
   const propertyDetails = data?.data ?? {};
 
   return (
@@ -65,6 +67,15 @@ export const PropertyDetails: React.FC = () => {
             src={propertyDetails.photo}
             alt={propertyDetails.title}
           />
+          <Typography
+            variant="body1"
+            fontWeight={500}
+            textAlign="justify"
+            mt="20px"
+          >
+            {propertyDetails.description}
+          </Typography>
+         
         </Box>
         <Stack
           direction="column"
@@ -73,6 +84,7 @@ export const PropertyDetails: React.FC = () => {
           borderRadius="10px"
           padding={{ xs: "0 20px", lg: "0 10px" }}
           width={{ xs: "100%", lg: "50%" }}
+          height="auto"
         >
           <Typography variant="h2" fontWeight={700} color="#11142d">
             {propertyDetails.title}
@@ -115,9 +127,7 @@ export const PropertyDetails: React.FC = () => {
               max={5}
             />
           </Box>
-          <Typography variant="body1" fontWeight={500}>
-            {propertyDetails.description}
-          </Typography>
+
           <Stack
             direction="row"
             width="100%"
@@ -135,9 +145,12 @@ export const PropertyDetails: React.FC = () => {
               color="#fcfcfc"
               title="Delete"
               backgroundColor="#da1e28"
-              handleClick={handleDeleteProperty}  
+              handleClick={handleDeleteProperty}
             />
           </Stack>
+          <Box height={{xs:'200px',sm:'300px'}} width="100%" mt={{xs:'10px',md:'15px'}}>
+            <Map location={[54.6345,32.63]}/>
+          </Box>
         </Stack>
       </Box>
     </Box>
