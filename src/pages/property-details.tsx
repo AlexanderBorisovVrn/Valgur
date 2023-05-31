@@ -49,6 +49,7 @@ export const PropertyDetails: React.FC = () => {
     navigate("/properties/edit/" + id);
   };
   const propertyDetails = data?.data ?? {};
+  window.ymaps.geocode(propertyDetails.location).then(res=>console.log())
 
   return (
     <Box padding="15px" bgcolor="#fcfcfc" borderRadius="10px">

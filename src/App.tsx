@@ -1,4 +1,4 @@
-import { Refine, AuthProvider, Authenticated } from "@pankod/refine-core";
+import { Refine, AuthProvider } from "@pankod/refine-core";
 import { YMaps } from "@pbe/react-yandex-maps";
 import {
   notificationProvider,
@@ -11,12 +11,7 @@ import {
 import { MapSuggest } from "components/common/MapSuggest";
 
 import dataProvider from "@pankod/refine-simple-rest";
-import routerProvider, {
-  BrowserRouter,
-  Outlet,
-  Route,
-  Routes,
-} from "@pankod/refine-react-router-v6";
+import routerProvider from "@pankod/refine-react-router-v6";
 import axios, { AxiosRequestConfig } from "axios";
 import { ColorModeContextProvider } from "contexts";
 import { Title, Sider, Layout, Header } from "components/layout";
@@ -58,52 +53,55 @@ axiosInstance.interceptors.request.use((request: AxiosRequestConfig) => {
 function App() {
   const authProvider: AuthProvider = {
     login: async ({ credential }: CredentialResponse) => {
-      if (typeof credential !== "string") {
-        fetch("http://localhost:8090/api/v1/users/signup", {
+      if (!credential) return;
+      const profileObj = credential ? parseJwt(credential) : null;
+      if (profileObj) {
+        const response = await fetch("http://localhost:8090/api/v1/users", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(credential),
-        })
-          .then((res) => {
-            if (res.status !== 200) {
-              throw res.status;
-            } else {
-              return res.json();
-            }
-          })
-          .then((user) => {
-            localStorage.setItem("user", JSON.stringify(user));
-            localStorage.setItem("token", user.accessToken);
-          })
-          .catch((e) => console.log("Response status " + e + ". User exists"));
-      } else {
-        const profileObj = credential ? parseJwt(credential) : null;
-        if (profileObj) {
-          const response = await fetch("http://localhost:8090/api/v1/users", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: profileObj.name,
-              email: profileObj.email,
-              avatar: profileObj.picture,
-            }),
-          });
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: profileObj.name,
+            email: profileObj.email,
+            avatar: profileObj.picture,
+          }),
+        });
 
-          if (response.status === 200) {
-            const data = await response.json();
-            localStorage.setItem("user", JSON.stringify(data));
-          } else {
-            return Promise.reject();
-          }
+        if (response.status === 200) {
+          const data = await response.json();
+          localStorage.setItem("user", JSON.stringify(data));
+        } else {
+          return Promise.reject();
         }
         localStorage.setItem("token", `${credential}`);
+       return Promise.resolve();
       }
-
+    },
+    register: ({ credential }) => {
+      fetch("http://localhost:8090/api/v1/users/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credential),
+      })
+        .then((res) => {
+          if (res.status !== 200) {
+            throw res.status;
+          } else {
+            return res.json();
+          }
+        })
+        .then((user) => {
+          localStorage.setItem("user", JSON.stringify(user));
+          localStorage.setItem("token", user.accessToken);
+          return {
+            success: true,
+            redirectTo: "/",
+          };
+        })
+        .catch((e) => console.log("Response status " + e + "."));
       return Promise.resolve();
     },
-
     logout: () => {
       const token = localStorage.getItem("token");
 
@@ -136,7 +134,6 @@ function App() {
       }
     },
   };
-
   return (
     <>
       <ColorModeContextProvider>
@@ -168,11 +165,7 @@ function App() {
                   list: MapSuggest,
                   icon: <StarOutlineRounded />,
                 },
-                // {
-                //   name: "messages",
-                //   list: Home,
-                //   icon: <ChatBubbleOutline />,
-                // },
+
                 {
                   name: "my-profile",
                   options: {

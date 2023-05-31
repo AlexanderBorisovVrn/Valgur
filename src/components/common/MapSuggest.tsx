@@ -1,10 +1,11 @@
-
 import * as React from "react";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import Typography from "@mui/material/Typography";
+import {
+  FormControl,
+  FormHelperText,
+  Autocomplete,
+  TextField,
+} from "@pankod/refine-mui";
+import { useFormContext } from "@pankod/refine-react-hook-form";
 import { debounce } from "@mui/material/utils";
 
 type AutocompleteType<T> = {
@@ -15,16 +16,48 @@ const autocompleteService: AutocompleteType<typeof window.ymaps> = {
   current: null,
 };
 
+const RenderField = ({ params }: any) => {
+  const { register } = useFormContext();
+  return (
+    <FormControl fullWidth>
+      <FormHelperText
+        sx={{
+          fontWeight: 500,
+          margin: "10px 0",
+          fontSize: 16,
+          color: "#11124d",
+        }}
+      >
+        Enter Location
+      </FormHelperText>
+      <TextField
+        {...params}
+        fullWidth
+        required
+        type="text"
+        id="outlined-basic"
+        color="info"
+        variant="outlined"
+        {...register("location", {
+          required: true,
+        })}
+      />
+    </FormControl>
+  );
+};
+
 export function MapSuggest() {
-  const [value, setValue] = React.useState(null);
+  const [value, setValue] = React.useState<any[] | null>(null);
   const [inputValue, setInputValue] = React.useState("");
   const [options, setOptions] = React.useState<any[]>([]);
 
-
   const fetch = React.useMemo(
-    () => debounce((request,callback)=>{
-      window.ymaps.suggest(request.input).then(res=>callback(res))
-    }, 400),
+    () =>
+      debounce((request, callback) => {
+        window.ymaps.suggest(request.input).then((res) => {
+          callback(res);
+        });
+      }, 400),
     []
   );
 
@@ -65,27 +98,30 @@ export function MapSuggest() {
   return (
     <Autocomplete
       id="suggest-location"
-      sx={{ width: 300 }}
+      fullWidth
       filterOptions={(x) => x}
       options={options}
       autoComplete
       includeInputInList
       filterSelectedOptions
-      value={value}
+      value={value && value[0].label}
       noOptionsText="No locations"
-       getOptionLabel={(option) =>
-        typeof option === 'string' ? option : option.value
-      }
-      onChange={(event, newValue:any) => {
-        setOptions(newValue ? [newValue.value, ...options] : options);
-        setValue(newValue.value);
+      getOptionLabel={(option) => {
+        return typeof option === "string" ? option : option.value;
+      }}
+      isOptionEqualToValue={(option, value) => {
+        return option.value === value.label;
+      }}
+      onChange={(event, newValue: any) => {
+        setOptions(
+          newValue ? [{ label: newValue.value, location: "" }] : options
+        );
+        setValue(newValue ? [{ label: newValue.value, location: "" }] : null);
       }}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
       }}
-      renderInput={(params) => (
-        <TextField {...params} label="Add a location" fullWidth />
-      )}
+      renderInput={(params) => <RenderField params={params} />}
     />
   );
 }

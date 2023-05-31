@@ -25,10 +25,7 @@ export type FileType = File | null
 
 export interface IForm {
   type: "Create" | "Edit";
-  register: typeof register;
-  onFinish: typeof onFinish;
   formLoading: boolean;
-  handleSubmit: typeof handleSubmit;
   handleImageChange: (file: FileType) => void;
   onFinishHandler: (data: FieldValues) => void;
   propertyImage: T extends PropertyImageProps ? PropertyImageProps : undefined;

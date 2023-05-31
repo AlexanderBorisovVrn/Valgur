@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useGetIdentity } from "@pankod/refine-core";
-import { FieldValues, useForm } from "@pankod/refine-react-hook-form";
+import {
+  FieldValues,
+  useForm,
+  FormProvider,
+} from "@pankod/refine-react-hook-form";
 import { useNavigate } from "@pankod/refine-react-router-v6";
 import compression from "browser-image-compression";
 import Form from "components/common/Form";
@@ -22,8 +26,7 @@ export const EditProperty = () => {
   });
   const {
     refineCore: { onFinish, formLoading },
-    register,
-    handleSubmit,
+    ...methods
   } = useForm();
 
   const handleImageChange = (file: FileType) => {
@@ -58,15 +61,14 @@ export const EditProperty = () => {
   };
 
   return (
-    <Form
-      type="Edit"
-      register={register}
-      onFinish={onFinish}
-      formLoading={formLoading}
-      handleSubmit={handleSubmit}
-      handleImageChange={handleImageChange}
-      onFinishHandler={onFinishHandler}
-      propertyImage={propertyImage}
-    />
+    <FormProvider {...methods}>
+      <Form
+        type="Edit"
+        formLoading={formLoading}
+        handleImageChange={handleImageChange}
+        onFinishHandler={onFinishHandler}
+        propertyImage={propertyImage}
+      />
+    </FormProvider>
   );
 };

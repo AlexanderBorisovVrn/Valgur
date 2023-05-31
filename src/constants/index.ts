@@ -33,3 +33,5 @@ export const propertyReferralsInfo:Array<IReferralsPropery> = [
   ];
 
  export const authButtonWidth = 300;
+
+ export const _id =process.env.REACT_APP_AI_KEY

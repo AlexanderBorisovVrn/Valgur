@@ -9,7 +9,7 @@ import {
   Button,
 } from "@pankod/refine-mui";
 import { IForm } from "interfaces/components";
-import { useLogin } from "@pankod/refine-core";
+import { useLogin,useRegister } from "@pankod/refine-core";
 import { loadCompressedImg } from "utils/loadCompressedImg";
 import Placeholder from "../../assets/avatar-placeholder.svg";
 import CustomButton from "./CustomButton";
@@ -33,7 +33,7 @@ const SignUp = ({ close, isOpened }: FormVisible) => {
     avatar: "",
     pass: "",
   } as ISignUp);
-  const { mutate: login } = useLogin<CredentialResponse>();
+  const { mutate: register } = useRegister<CredentialResponse>();
 
   const setAvatar = (img: string) => {
     setCredentials({
@@ -43,7 +43,7 @@ const SignUp = ({ close, isOpened }: FormVisible) => {
   };
 
   const onSubmit = (e: React.FormEvent) => {
-    login({credential:credentials},);
+    register({credential:credentials});
     close(false)
   };
 
