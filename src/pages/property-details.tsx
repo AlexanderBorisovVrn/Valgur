@@ -6,7 +6,7 @@ import { Map } from "components/common/Map";
 
 import {
   ChatBubble,
-  Delete,   
+  Delete,
   Edit,
   Phone,
   Place,
@@ -27,7 +27,6 @@ export const PropertyDetails: React.FC = () => {
   if (isError) {
     return <div>Error</div>;
   }
-
   const handleDeleteProperty = () => {
     const response = window.confirm(
       "Are you shure you want to delete this property?"
@@ -45,11 +44,15 @@ export const PropertyDetails: React.FC = () => {
     }
   };
 
-  const handleEditProperty = () => {
-    navigate("/properties/edit/" + id);
-  };
   const propertyDetails = data?.data ?? {};
-  window.ymaps.geocode(propertyDetails.location).then(res=>console.log())
+  const isCurrentUser = user.email === propertyDetails?.creator?.email;
+
+  const handleEditProperty = () => {
+    if (isCurrentUser) {
+      navigate("/properties/edit/" + id);
+    }
+  };
+  window.ymaps.geocode(propertyDetails.location).then((res) => console.log());
 
   return (
     <Box padding="15px" bgcolor="#fcfcfc" borderRadius="10px">
@@ -76,7 +79,6 @@ export const PropertyDetails: React.FC = () => {
           >
             {propertyDetails.description}
           </Typography>
-         
         </Box>
         <Stack
           direction="column"
@@ -138,19 +140,29 @@ export const PropertyDetails: React.FC = () => {
           >
             <CustomButton
               color="#fcfcfc"
-              title="Edit"
+              title={isCurrentUser ? "Edit" : "Message"}
+              icon={isCurrentUser ? <Edit /> : <ChatBubble />}
               backgroundColor="#475be8"
               handleClick={handleEditProperty}
             />
             <CustomButton
               color="#fcfcfc"
-              title="Delete"
+              title={isCurrentUser ? "Delete" : "Call"}
+              icon={isCurrentUser ? <Delete /> : <Phone />}
               backgroundColor="#da1e28"
-              handleClick={handleDeleteProperty}
+              handleClick={() => {
+                if (isCurrentUser) {
+                  handleDeleteProperty();
+                }
+              }}
             />
           </Stack>
-          <Box height={{xs:'200px',sm:'300px'}} width="100%" mt={{xs:'10px',md:'15px'}}>
-            <Map location={[54.6345,32.63]}/>
+          <Box
+            height={{ xs: "200px", sm: "270px" }}
+            width="100%"
+            mt={{ xs: "10px", md: "15px" }}
+          >
+            <Map location={[54.6345, 32.63]} />
           </Box>
         </Stack>
       </Box>

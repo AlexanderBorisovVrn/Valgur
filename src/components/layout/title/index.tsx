@@ -7,13 +7,11 @@ export const Title: React.FC<TitleProps> = ({ collapsed }) => {
 
   return (
     <Button fullWidth variant="text" disableRipple>
-      <Link to="/">
+      <Link to="/"  style={{ textDecoration: 'none' }}>
         {collapsed ? (
-          <img src="/valgur.svg" alt="Refine" width="64px" />
+          null
         ) : (
-          <Typography
-         
-          >VALGUR</Typography>
+          <Typography color='#475BE8' fontWeight={700} fontSize={24}>VALGUR</Typography>
         )}
       </Link>
     </Button>

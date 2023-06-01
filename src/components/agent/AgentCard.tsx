@@ -112,7 +112,7 @@ const AgentCard = ({
                     />
                     <InfoBar
                         icon={<LocationCity sx={{ color: "#808191" }} />}
-                        name={`${noOfProperties} Properties`}
+                        name={`${noOfProperties || 'No'} Properties`}
                     />
                 </Stack>
             </Stack>
