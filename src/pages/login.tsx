@@ -6,6 +6,7 @@ import { Button } from "@pankod/refine-mui";
 import { authButtonWidth } from "../constants";
 import SignUp from "components";
 import LoginForm from "components/common/LoginForm";
+import PopupBanner from "components/common/PopupBanner";
 
 const buttonStyles = {
   width: authButtonWidth + "px",
@@ -115,10 +116,12 @@ export const Login: React.FC = () => {
             <GoogleButton />
 
             <SignUp isOpened={isOpened} close={setIsOpened} />
-            <LoginForm
-              isLoginFormOpened={isLoginFormOpened}
-              closeLoginForm={setisLoginFormOpened}
-            />
+            <PopupBanner
+              isOpened={isLoginFormOpened}
+              close={setisLoginFormOpened}
+            >
+              <p>Heeloo</p>
+            </PopupBanner>
           </Stack>
         </Box>
       </Container>

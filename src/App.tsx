@@ -1,5 +1,4 @@
 import { Refine, AuthProvider } from "@pankod/refine-core";
-import { YMaps } from "@pbe/react-yandex-maps";
 import {
   notificationProvider,
   RefineSnackbarProvider,
@@ -152,7 +151,6 @@ function App() {
             },
           }}
         />
-        <YMaps>
             <RefineSnackbarProvider>
               <Refine
                 dataProvider={dataProvider("http://localhost:8090/api/v1")}
@@ -193,7 +191,6 @@ function App() {
                 DashboardPage={Home}
               />
             </RefineSnackbarProvider>
-        </YMaps>
       </ColorModeContextProvider>
     </>
   );
