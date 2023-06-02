@@ -1,8 +1,10 @@
 import React from "react";
 import { BaseRecord, useList } from "@pankod/refine-core";
 import { Box, Typography, Grid, Stack } from "@pankod/refine-mui";
-import { AgentCard } from "components";
 import { IAgentCardProp } from "interfaces/agent";
+import { lazy, Suspense } from "react";
+
+const AgentCard = lazy(() => import("../components/agent/AgentCard"));
 
 export const Agents = () => {
   const { data, isLoading, isError } = useList({ resource: "users" });
@@ -12,24 +14,21 @@ export const Agents = () => {
   if (isError) {
     return <Typography>Error</Typography>;
   }
-  const allAgents = (data?.data) || [];
+  const allAgents = data?.data || [];
 
   return (
-    <Box bgcolor="#fcfcfc" sx={{ flexGrow: 1}}>
-      <Stack
-      direction='row'
-      flexWrap='wrap'
-      gap='5px'
-      >
-      {allAgents.map((agent) => (
-            <AgentCard 
-            id={agent._id}
-            name={agent.name}
-            email={agent.email}
-            avatar={agent.avatar}
-            noOfProperties={agent.noOfProperties}
-            key={agent._id}
+    <Box bgcolor="#fcfcfc" sx={{ flexGrow: 1 }}>
+      <Stack direction="row" flexWrap="wrap" gap="5px">
+        {allAgents.map((agent) => (
+          <Suspense key = {agent._id} fallback={<p>Please wait...</p>}>
+            <AgentCard
+              id={agent._id}
+              name={agent.name}
+              email={agent.email}
+              avatar={agent.avatar}
+              noOfProperties={agent.noOfProperties}
             />
+          </Suspense>
         ))}
       </Stack>
     </Box>

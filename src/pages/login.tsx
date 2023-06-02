@@ -5,12 +5,22 @@ import { CredentialResponse } from "../interfaces/auth";
 import { Button } from "@pankod/refine-mui";
 import { authButtonWidth } from "../constants";
 import SignUp from "components";
+import LoginForm from "components/common/LoginForm";
+
+const buttonStyles = {
+  width: authButtonWidth + "px",
+  height: "40px",
+  marginBottom: "10px",
+  backgroundColor: "#1a73e8",
+  color: "#fcfcfc",
+  fontFamily: "Google Sans,arial,sans-serif",
+  "&:hover": { backgroundColor: "#1a73e8dc" },
+};
 
 export const Login: React.FC = () => {
-  const { mutate: login } = useLogin<CredentialResponse>({
-    
-});
+  const { mutate: login } = useLogin<CredentialResponse>({});
   const [isOpened, setIsOpened] = useState<boolean>(false);
+  const [isLoginFormOpened, setisLoginFormOpened] = useState<boolean>(false);
 
   const GoogleButton = (): JSX.Element => {
     const divRef = useRef<HTMLDivElement>(null);
@@ -89,21 +99,26 @@ export const Login: React.FC = () => {
             <Button
               type="button"
               onClick={() => setIsOpened(!isOpened)}
-              sx={{
-                width: authButtonWidth + "px",
-                height: "40px",
-                marginBottom: "10px",
-                backgroundColor: "#1a73e8",
-                color: "#fcfcfc",
-                fontFamily: "Google Sans,arial,sans-serif",
-                "&:hover": { backgroundColor: "#1a73e8dc" },
-              }}
+              sx={buttonStyles}
             >
               Sign Up
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                setisLoginFormOpened(true);
+              }}
+              sx={buttonStyles}
+            >
+              Login
             </Button>
             <GoogleButton />
 
             <SignUp isOpened={isOpened} close={setIsOpened} />
+            <LoginForm
+              isLoginFormOpened={isLoginFormOpened}
+              closeLoginForm={setisLoginFormOpened}
+            />
           </Stack>
         </Box>
       </Container>

@@ -2,7 +2,7 @@ import { Box, Typography, Stack } from '@pankod/refine-mui';
 import { IPieChart } from 'interfaces/chart';
 import ReactApexChart from 'react-apexcharts';
 import { ArrowCircleUpRounded } from '@mui/icons-material';
-import { TotalRevenueOptions, TotalRevenueSeries } from './chart.config';
+import TotalRevenueOptionsHorizontal,{ TotalRevenueOptions, TotalRevenueSeries } from './chart.config';
 
 const TotalRevenue = () => {
   return (
@@ -10,6 +10,7 @@ const TotalRevenue = () => {
       p={4}
       flex={1}
       bgcolor='#fcfcfc'
+      maxWidth='100%'
       display='flex'
       id='chart'
       flexDirection='column'

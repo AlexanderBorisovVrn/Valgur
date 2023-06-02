@@ -59,3 +59,9 @@ export const TotalRevenueOptions: ApexOptions = {
     },
   },
 };
+
+const TotalRevenueOptionsHorizontal ={...TotalRevenueOptions};
+//@ts-ignore
+TotalRevenueOptionsHorizontal.plotOptions.bar.horizontal = true;
+
+export default TotalRevenueOptionsHorizontal;

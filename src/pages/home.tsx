@@ -16,7 +16,7 @@ export const Home: FC = () => {
         <Typography fontSize={25} fontWeight={700} color='#11142d'>
             Dashboard
         </Typography>
-        <Box mt='20px' display='flex' flexWrap='wrap' gap={4}>
+        <Box mt='20px' display='flex' flexDirection={{xs:'column',md:'row'}} flexWrap='wrap' gap={4}>
             <PieChart
                 title="Properties for sales"
                 value={684}

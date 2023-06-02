@@ -3,8 +3,8 @@ import { useGetIdentity } from "@pankod/refine-core";
 import { Box, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-import {IInfoBarProp,IAgentCardProp} from 'interfaces/agent'
 
+import {IInfoBarProp,IAgentCardProp} from 'interfaces/agent'
 
 function checkImage(url: any) {
     const img = new Image();
@@ -35,9 +35,7 @@ const AgentCard = ({
     noOfProperties,
 }: IAgentCardProp) => {
     const { data: currentUser } = useGetIdentity({
-        
     });
-
     const generateLink = () => {
         if (currentUser.email === email) return "/my-profile";
 

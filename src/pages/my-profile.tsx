@@ -8,7 +8,6 @@ const MyProfile = () => {
     resource: "users",
     id: user?.id,
   });
-  console.log(user)
 
   const myProfile = data?.data || {};
   

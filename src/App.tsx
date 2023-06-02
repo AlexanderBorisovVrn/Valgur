@@ -8,7 +8,6 @@ import {
   ReadyPage,
   ErrorComponent,
 } from "@pankod/refine-mui";
-import { MapSuggest } from "components/common/MapSuggest";
 
 import dataProvider from "@pankod/refine-simple-rest";
 import routerProvider from "@pankod/refine-react-router-v6";
@@ -73,9 +72,10 @@ function App() {
           return Promise.reject();
         }
         localStorage.setItem("token", `${credential}`);
-       return Promise.resolve();
+        return Promise.resolve();
       }
     },
+
     register: ({ credential }) => {
       fetch("http://localhost:8090/api/v1/users/signup", {
         method: "POST",
@@ -85,13 +85,16 @@ function App() {
         body: JSON.stringify(credential),
       })
         .then((res) => {
+          console.log(res)
           if (res.status !== 200) {
-            throw res.status;
+            console.log(res)
+            throw new Error('Response status '+res.status);
           } else {
             return res.json();
           }
         })
         .then((user) => {
+          console.log(user)
           localStorage.setItem("user", JSON.stringify(user));
           localStorage.setItem("token", user.accessToken);
           return {
@@ -102,6 +105,7 @@ function App() {
         .catch((e) => console.log("Response status " + e + "."));
       return Promise.resolve();
     },
+
     logout: () => {
       const token = localStorage.getItem("token");
 
@@ -138,53 +142,57 @@ function App() {
     <>
       <ColorModeContextProvider>
         <CssBaseline />
-        <GlobalStyles styles={{ html: { WebkitFontSmoothing: "auto" } }} />
+        <GlobalStyles
+          styles={{
+            html: { WebkitFontSmoothing: "auto" },
+            body: {
+              overflowX: "hidden",
+              width: "100%",
+              maxWidth: "100vw",
+            },
+          }}
+        />
         <YMaps>
-          <RefineSnackbarProvider>
-            <Refine
-              dataProvider={dataProvider("http://localhost:8090/api/v1")}
-              notificationProvider={notificationProvider}
-              ReadyPage={ReadyPage}
-              catchAll={<ErrorComponent />}
-              resources={[
-                {
-                  name: "properties",
-                  list: AllProperties,
-                  show: PropertyDetails,
-                  create: CreateProperty,
-                  edit: EditProperty,
-                },
-                {
-                  name: "agents",
-                  list: Agents,
-                  show: AgentProfile,
-                  icon: <PeopleAltOutlined />,
-                },
-                {
-                  name: "reviews",
-                  list: MapSuggest,
-                  icon: <StarOutlineRounded />,
-                },
-
-                {
-                  name: "my-profile",
-                  options: {
-                    label: "My Profile",
+            <RefineSnackbarProvider>
+              <Refine
+                dataProvider={dataProvider("http://localhost:8090/api/v1")}
+                notificationProvider={notificationProvider}
+                ReadyPage={ReadyPage}
+                catchAll={<ErrorComponent />}
+                resources={[
+                  {
+                    name: "properties",
+                    list: AllProperties,
+                    show: PropertyDetails,
+                    create: CreateProperty,
+                    edit: EditProperty,
                   },
-                  list: MyProfile,
-                  icon: <AccountCircleOutlined />,
-                },
-              ]}
-              Title={Title}
-              Sider={Sider}
-              Layout={Layout}
-              Header={Header}
-              routerProvider={routerProvider}
-              authProvider={authProvider}
-              LoginPage={Login}
-              DashboardPage={Home}
-            />
-          </RefineSnackbarProvider>
+                  {
+                    name: "agents",
+                    list: Agents,
+                    show: AgentProfile,
+                    icon: <PeopleAltOutlined />,
+                  },
+
+                  {
+                    name: "my-profile",
+                    options: {
+                      label: "My Profile",
+                    },
+                    list: MyProfile,
+                    icon: <AccountCircleOutlined />,
+                  },
+                ]}
+                Title={Title}
+                Sider={Sider}
+                Layout={Layout}
+                Header={Header}
+                routerProvider={routerProvider}
+                authProvider={authProvider}
+                LoginPage={Login}
+                DashboardPage={Home}
+              />
+            </RefineSnackbarProvider>
         </YMaps>
       </ColorModeContextProvider>
     </>

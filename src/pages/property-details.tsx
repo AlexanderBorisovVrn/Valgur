@@ -55,7 +55,7 @@ export const PropertyDetails: React.FC = () => {
   window.ymaps.geocode(propertyDetails.location).then((res) => console.log());
 
   return (
-    <Box padding="15px" bgcolor="#fcfcfc" borderRadius="10px">
+    <Box padding="15px" bgcolor="#fcfcfc" borderRadius="10px" maxWidth='100%'>
       <Typography fontSize={25} fontWeight={700} color="#11142d">
         Details
       </Typography>

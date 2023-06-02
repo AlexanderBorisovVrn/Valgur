@@ -21,7 +21,11 @@ const propertiesTypeList = [
   "DUPLEX",
   "STUDIO",
   "CHALET",
-].map(type=><MenuItem value={type.toLowerCase()} key={type}>{type}</MenuItem>);
+].map((type) => (
+  <MenuItem value={type.toLowerCase()} key={type}>
+    {type}
+  </MenuItem>
+));
 
 export const AllProperties: FC = () => {
   const navigate = useNavigate();
@@ -59,8 +63,6 @@ export const AllProperties: FC = () => {
     setSorter([{ field, order: currentPrice === "asc" ? "desc" : "asc" }]);
   const toggleIcon = currentPrice === "asc" ? "↑" : "↓";
 
-
-
   const renderAllProperties = allProperties.map((property) => {
     return (
       <PropertyCard
@@ -82,6 +84,7 @@ export const AllProperties: FC = () => {
       <Box
         sx={{
           display: "flex",
+          flexDirection: { xs: "column", md: "row" },
           flexWrap: "wrap",
           gap: 3,
         }}
@@ -153,12 +156,20 @@ export const AllProperties: FC = () => {
           icon={<Add />}
         />
       </Stack>
-      <Stack direction="row" gap={2} flexWrap="wrap" my={2}>
+      <Stack
+        direction={{ xs: "column", md: "row" }}
+        width='100%'
+        justifyContent={{xs:'center',md:'flex-start'}}
+        gap={2}
+        flexWrap="wrap"
+        my={2}
+      >
         {renderAllProperties}
       </Stack>
       {renderAllProperties.length > 0 && (
         <Box
           display="flex"
+          maxWidth="100%"
           flexDirection="row"
           alignItems="center"
           mt={1}
@@ -175,7 +186,7 @@ export const AllProperties: FC = () => {
             title="Next"
             color="#fcfcfc"
             backgroundColor="#475be8"
-            disabled={current===pageCount}
+            disabled={current === pageCount}
             handleClick={() => setCurrent(current + 1)}
           />
           <Box display="flex" alignItems="center">
@@ -185,8 +196,8 @@ export const AllProperties: FC = () => {
             variant="outlined"
             color="info"
             inputProps={{ "aria-label": "Without-label" }}
-            onChange={(e)=>{
-              setPageSize(+e.target.value||12)
+            onChange={(e) => {
+              setPageSize(+e.target.value || 12);
             }}
             required
             defaultValue="12"
