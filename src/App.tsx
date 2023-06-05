@@ -50,29 +50,39 @@ axiosInstance.interceptors.request.use((request: AxiosRequestConfig) => {
 
 function App() {
   const authProvider: AuthProvider = {
-    login: async ({ credential }: CredentialResponse) => {
+    login: async ({ credential, type }: CredentialResponse) => {
       if (!credential) return;
-      const profileObj = credential ? parseJwt(credential) : null;
-      if (profileObj) {
-        const response = await fetch("http://localhost:8090/api/v1/users", {
+      let response;
+      const loginType = type === "google";
+      if (!loginType) {
+        response = await fetch("http://localhost:8090/api/v1/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(credential),
+        });
+      } else {
+        const googleCredential = parseJwt(credential);
+        response = await fetch("http://localhost:8090/api/v1/users/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            name: profileObj.name,
-            email: profileObj.email,
-            avatar: profileObj.picture,
+            name: googleCredential.name,
+            email: googleCredential.email,
+            avatar: googleCredential.picture,
+            pass: "google",
           }),
         });
-
-        if (response.status === 200) {
-          const data = await response.json();
-          localStorage.setItem("user", JSON.stringify(data));
-        } else {
-          return Promise.reject();
-        }
-        localStorage.setItem("token", `${credential}`);
-        return Promise.resolve();
       }
+      console.log(response);
+
+      if (response.status === 200) {
+        const data = await response.json();
+        localStorage.setItem("user", JSON.stringify(data));
+      } else {
+        return Promise.reject(response.status);
+      }
+      localStorage.setItem("token", `${credential}`);
+      return Promise.resolve();
     },
 
     register: ({ credential }) => {
@@ -84,16 +94,16 @@ function App() {
         body: JSON.stringify(credential),
       })
         .then((res) => {
-          console.log(res)
+          console.log(res);
           if (res.status !== 200) {
-            console.log(res)
-            throw new Error('Response status '+res.status);
+            console.log(res);
+            throw new Error("Response status " + res.status);
           } else {
             return res.json();
           }
         })
         .then((user) => {
-          console.log(user)
+          console.log(user);
           localStorage.setItem("user", JSON.stringify(user));
           localStorage.setItem("token", user.accessToken);
           return {
@@ -135,6 +145,7 @@ function App() {
       if (user) {
         return Promise.resolve(JSON.parse(user));
       }
+      return Promise.reject();
     },
   };
   return (
@@ -151,46 +162,46 @@ function App() {
             },
           }}
         />
-            <RefineSnackbarProvider>
-              <Refine
-                dataProvider={dataProvider("http://localhost:8090/api/v1")}
-                notificationProvider={notificationProvider}
-                ReadyPage={ReadyPage}
-                catchAll={<ErrorComponent />}
-                resources={[
-                  {
-                    name: "properties",
-                    list: AllProperties,
-                    show: PropertyDetails,
-                    create: CreateProperty,
-                    edit: EditProperty,
-                  },
-                  {
-                    name: "agents",
-                    list: Agents,
-                    show: AgentProfile,
-                    icon: <PeopleAltOutlined />,
-                  },
+        <RefineSnackbarProvider>
+          <Refine
+            dataProvider={dataProvider("http://localhost:8090/api/v1")}
+            notificationProvider={notificationProvider}
+            ReadyPage={ReadyPage}
+            catchAll={<ErrorComponent />}
+            resources={[
+              {
+                name: "properties",
+                list: AllProperties,
+                show: PropertyDetails,
+                create: CreateProperty,
+                edit: EditProperty,
+              },
+              {
+                name: "agents",
+                list: Agents,
+                show: AgentProfile,
+                icon: <PeopleAltOutlined />,
+              },
 
-                  {
-                    name: "my-profile",
-                    options: {
-                      label: "My Profile",
-                    },
-                    list: MyProfile,
-                    icon: <AccountCircleOutlined />,
-                  },
-                ]}
-                Title={Title}
-                Sider={Sider}
-                Layout={Layout}
-                Header={Header}
-                routerProvider={routerProvider}
-                authProvider={authProvider}
-                LoginPage={Login}
-                DashboardPage={Home}
-              />
-            </RefineSnackbarProvider>
+              {
+                name: "my-profile",
+                options: {
+                  label: "My Profile",
+                },
+                list: MyProfile,
+                icon: <AccountCircleOutlined />,
+              },
+            ]}
+            Title={Title}
+            Sider={Sider}
+            Layout={Layout}
+            Header={Header}
+            routerProvider={routerProvider}
+            authProvider={authProvider}
+            LoginPage={Login}
+            DashboardPage={Home}
+          />
+        </RefineSnackbarProvider>
       </ColorModeContextProvider>
     </>
   );

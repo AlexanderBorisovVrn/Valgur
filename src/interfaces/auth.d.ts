@@ -26,7 +26,7 @@ export interface CredentialResponse {
     | "brn_add_session"
     | "btn_confirm_add_session";
   clientId?: string;
-  redirectPath?:string
+  type?:'google' | 'login'
 }
 
 export interface GsiButtonConfiguration {

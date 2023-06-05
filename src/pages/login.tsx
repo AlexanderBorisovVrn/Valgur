@@ -38,7 +38,7 @@ export const Login: React.FC = () => {
             "573367553697-es3h6ij12egsn73a6lp96q2p1vt6js83.apps.googleusercontent.com",
           callback: async (res: CredentialResponse) => {
             if (res.credential) {
-              login(res);
+              login({credential:res.credential,type:'google'});
             }
           },
         });
@@ -120,7 +120,7 @@ export const Login: React.FC = () => {
               isOpened={isLoginFormOpened}
               close={setisLoginFormOpened}
             >
-              <p>Heeloo</p>
+              <LoginForm/>
             </PopupBanner>
           </Stack>
         </Box>
