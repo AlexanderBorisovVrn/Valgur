@@ -2,12 +2,11 @@ import { Box, Button, Stack, Typography } from "@pankod/refine-mui";
 
 type FormVisible = {
   close: (t: boolean) => void;
-  isOpened: boolean;
-  children: any;
+  children?: any;
 };
 
-const PopupBanner = ({ close, isOpened, children }: FormVisible) => {
-  return isOpened ? (
+const PopupBanner = ({ close, children }: FormVisible) => {
+  return  (
     <Box
       sx={{
         position: "fixed",
@@ -34,11 +33,9 @@ const PopupBanner = ({ close, isOpened, children }: FormVisible) => {
         {/* close button */}
         <Box
           position="absolute"
-          right='15px'
-          width="40px"
-          height="60px"
+          right='0'
+          top='0'
           display="flex"
-          padding='5px'
           justifyContent="center"
           alignItems="center"
         >
@@ -46,25 +43,19 @@ const PopupBanner = ({ close, isOpened, children }: FormVisible) => {
             title="Close"
             onClick={() => close(false)}
             sx={{
-              display:'flex',
-              alignItems:'center',
-              justifyContent:'center',
+              padding:'5px',
               verticalAlign: "middle",
               color: "#2c2c2cdc",
               fontSize: "24px",
-              width:'100%',
-              height:'100%',
-              borderRadius:"50%"
             }}
           >
             &#128473;
           </Button>
         </Box>
-
         {children}
       </Box>
     </Box>
-  ) : null;
+  ) 
 };
 
 export default PopupBanner;

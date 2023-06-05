@@ -1,18 +1,34 @@
-import { Refine, AuthProvider } from "@pankod/refine-core";
 import {
+  GitHubBanner,
+  Refine,
+  AuthBindings,
+  Authenticated,
+} from "@refinedev/core";
+import {
+  ThemedLayoutV2,
+  ErrorComponent,
+  RefineThemes,
   notificationProvider,
   RefineSnackbarProvider,
-  CssBaseline,
-  GlobalStyles,
-  ReadyPage,
-  ErrorComponent,
-} from "@pankod/refine-mui";
+  AuthPage,
+  //@ts-ignore
+} from "@refinedev/mui";
+
+import CssBaseline from "@mui/material/CssBaseline";
+import GlobalStyles from "@mui/material/GlobalStyles";
 
 import dataProvider from "@pankod/refine-simple-rest";
-import routerProvider from "@pankod/refine-react-router-v6";
+import routerProvider, {
+  NavigateToResource,
+  CatchAllNavigate,
+  UnsavedChangesNotifier,
+  DocumentTitleHandler,
+  //@ts-ignore
+} from "@refinedev/react-router-v6";
 import axios, { AxiosRequestConfig } from "axios";
 import { ColorModeContextProvider } from "contexts";
 import { Title, Sider, Layout, Header } from "components/layout";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { CredentialResponse } from "interfaces/auth";
 import { parseJwt } from "utils/parse-jwt";
 import {
@@ -21,7 +37,12 @@ import {
   PeopleAltOutlined,
   StarOutlineRounded,
 } from "@mui/icons-material";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import GoogleIcon from "@mui/icons-material/Google";
 import Pages from "pages";
+import { useEffect } from "react";
+import { FormControlLabel, Checkbox } from "@pankod/refine-mui";
+import { useFormContext } from "@pankod/refine-react-hook-form";
 const {
   Home,
   Agents,
@@ -48,10 +69,29 @@ axiosInstance.interceptors.request.use((request: AxiosRequestConfig) => {
   return request;
 });
 
+const RememeberMe = () => {
+  const { register } = useFormContext();
+
+  return (
+    <FormControlLabel
+      sx={{
+        span: {
+          fontSize: "12px",
+          color: "text.secondary",
+        },
+      }}
+      color="secondary"
+      control={
+        <Checkbox size="small" id="rememberMe" {...register("rememberMe")} />
+      }
+      label="Remember me"
+    />
+  );
+};
+
 function App() {
-  const authProvider: AuthProvider = {
+  const authProvider: AuthBindings = {
     login: async ({ credential }: CredentialResponse) => {
-      if (!credential) return;
       const profileObj = credential ? parseJwt(credential) : null;
       if (profileObj) {
         const response = await fetch("http://localhost:8090/api/v1/users", {
@@ -67,45 +107,49 @@ function App() {
         if (response.status === 200) {
           const data = await response.json();
           localStorage.setItem("user", JSON.stringify(data));
-        } else {
-          return Promise.reject();
-        }
-        localStorage.setItem("token", `${credential}`);
-        return Promise.resolve();
-      }
-    },
-
-    register: ({ credential }) => {
-      fetch("http://localhost:8090/api/v1/users/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credential),
-      })
-        .then((res) => {
-          console.log(res)
-          if (res.status !== 200) {
-            console.log(res)
-            throw new Error('Response status '+res.status);
-          } else {
-            return res.json();
-          }
-        })
-        .then((user) => {
-          console.log(user)
-          localStorage.setItem("user", JSON.stringify(user));
-          localStorage.setItem("token", user.accessToken);
+          localStorage.setItem("token", `${credential}`);
           return {
             success: true,
             redirectTo: "/",
           };
-        })
-        .catch((e) => console.log("Response status " + e + "."));
-      return Promise.resolve();
+        }
+      }
+      return {
+        success: false,
+        error: {
+          message: "Login failed",
+          name: "Invalid email or password",
+        },
+      };
     },
 
-    logout: () => {
+    register: async ({ credential }: any) => {
+      const response = await fetch(
+        "http://localhost:8090/api/v1/users/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(credential),
+        }
+      );
+      const user = response.status === 200 ? await response.json() : null;
+      if (user) {
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", user.accessToken);
+        return {
+          success: true,
+          redirectTo: "/",
+        };
+      }
+      return {
+        success: true,
+        redirectTo: "/",
+      };
+    },
+
+    logout: async () => {
       const token = localStorage.getItem("token");
 
       if (token && typeof window !== "undefined") {
@@ -113,85 +157,218 @@ function App() {
         localStorage.removeItem("user");
         axios.defaults.headers.common = {};
         window.google?.accounts.id.revoke(token, () => {
-          return Promise.resolve();
+          return {
+            success: true,
+            redirectTo: "/login",
+          };
         });
       }
 
-      return Promise.resolve();
+      return {
+        success: true,
+        redirectTo: "/login",
+      };
     },
-    checkError: () => Promise.resolve(),
-    checkAuth: async () => {
-      const token = localStorage.getItem("token");
-
-      if (token) {
-        return Promise.resolve();
-      }
-      return Promise.reject();
+    onError: async (error) => {
+      console.error(error);
+      return { error };
     },
+    check: async () =>
+      localStorage.getItem("email")
+        ? {
+            authenticated: true,
+          }
+        : {
+            authenticated: false,
+            error: {
+              message: "Check failed",
+              name: "Not authenticated",
+            },
+            logout: true,
+            redirectTo: "/login",
+          },
 
-    getPermissions: () => Promise.resolve(),
-    getUserIdentity: async () => {
+    getPermissions: async () => ["admin"],
+    getIdentity: async () => {
       const user = localStorage.getItem("user");
       if (user) {
-        return Promise.resolve(JSON.parse(user));
+        return JSON.parse(user);
       }
     },
   };
+
   return (
     <>
-      <ColorModeContextProvider>
-        <CssBaseline />
-        <GlobalStyles
-          styles={{
-            html: { WebkitFontSmoothing: "auto" },
-            body: {
-              overflowX: "hidden",
-              width: "100%",
-              maxWidth: "100vw",
-            },
-          }}
-        />
-            <RefineSnackbarProvider>
-              <Refine
-                dataProvider={dataProvider("http://localhost:8090/api/v1")}
-                notificationProvider={notificationProvider}
-                ReadyPage={ReadyPage}
-                catchAll={<ErrorComponent />}
-                resources={[
-                  {
-                    name: "properties",
-                    list: AllProperties,
-                    show: PropertyDetails,
-                    create: CreateProperty,
-                    edit: EditProperty,
-                  },
-                  {
-                    name: "agents",
-                    list: Agents,
-                    show: AgentProfile,
-                    icon: <PeopleAltOutlined />,
-                  },
+      <BrowserRouter>
+        <ColorModeContextProvider>
+          <CssBaseline />
+          <GlobalStyles
+            styles={{
+              html: { WebkitFontSmoothing: "auto" },
+              body: {
+                overflowX: "hidden",
+                width: "100%",
+                maxWidth: "100vw",
+              },
+            }}
+          />
+          <RefineSnackbarProvider>
+            <Refine
+              dataProvider={dataProvider("http://localhost:8090/api/v1")}
+              notificationProvider={notificationProvider}
+              routerProvider={routerProvider}
+              authProvider={authProvider}
+              resources={[
+                {
+                  name: "properties",
+                  list: '/all-properties',
+                  show: '/property-detail',
+                  create: '/create-property',
+                  edit: '/edit-property',
+                },
+                {
+                  name: "agents",
+                  list: Agents,
+                  show: AgentProfile,
+                  icon: <PeopleAltOutlined />,
+                },
 
-                  {
-                    name: "my-profile",
-                    options: {
-                      label: "My Profile",
-                    },
-                    list: MyProfile,
-                    icon: <AccountCircleOutlined />,
+                {
+                  name: "my-profile",
+                  options: {
+                    label: "My Profile",
                   },
-                ]}
-                Title={Title}
-                Sider={Sider}
-                Layout={Layout}
-                Header={Header}
-                routerProvider={routerProvider}
-                authProvider={authProvider}
-                LoginPage={Login}
-                DashboardPage={Home}
-              />
-            </RefineSnackbarProvider>
-      </ColorModeContextProvider>
+                  list: MyProfile,
+                  icon: <AccountCircleOutlined />,
+                },
+              ]}
+              options={{
+                syncWithLocation: true,
+                warnWhenUnsavedChanges: true,
+              }}
+            >
+              <Routes>
+                <Route
+                  element={
+                    <Authenticated fallback={<CatchAllNavigate to="/login" />}>
+                      <ThemedLayoutV2>
+                        <Outlet />
+                      </ThemedLayoutV2>
+                    </Authenticated>
+                  }
+                >
+                  <Route index element={<NavigateToResource resource="" />} />
+
+                  <Route path="/">
+                    <Route index element={<Home />} />
+                  </Route>
+                </Route>
+
+                <Route
+                  element={
+                    <Authenticated fallback={<Outlet />}>
+                      <NavigateToResource resource="properties" />
+                    </Authenticated>
+                  }
+                >
+                  <Route
+                    path="/login"
+                    element={
+                      <AuthPage
+                        type="login"
+                        rememberMe={<RememeberMe />}
+                        formProps={{
+                          defaultValues: {
+                            ...Credential,
+                          },
+                        }}
+                        providers={[
+                          {
+                            name: "google",
+                            label: "Sign in with Google",
+                            icon: (
+                              <GoogleIcon
+                                style={{
+                                  fontSize: 24,
+                                }}
+                              />
+                            ),
+                          },
+                          {
+                            name: "github",
+                            label: "Sign in with GitHub",
+                            icon: (
+                              <GitHubIcon
+                                style={{
+                                  fontSize: 24,
+                                }}
+                              />
+                            ),
+                          },
+                        ]}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/register"
+                    element={
+                      <AuthPage
+                        type="register"
+                        providers={[
+                          {
+                            name: "google",
+                            label: "Sign in with Google",
+                            icon: (
+                              <GoogleIcon
+                                style={{
+                                  fontSize: 24,
+                                }}
+                              />
+                            ),
+                          },
+                          {
+                            name: "github",
+                            label: "Sign in with GitHub",
+                            icon: (
+                              <GitHubIcon
+                                style={{
+                                  fontSize: 24,
+                                }}
+                              />
+                            ),
+                          },
+                        ]}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/forgot-password"
+                    element={<AuthPage type="forgotPassword" />}
+                  />
+                  <Route
+                    path="/update-password"
+                    element={<AuthPage type="updatePassword" />}
+                  />
+                </Route>
+
+                <Route
+                  element={
+                    <Authenticated>
+                      <ThemedLayoutV2>
+                        <Outlet />
+                      </ThemedLayoutV2>
+                    </Authenticated>
+                  }
+                >
+                  <Route path="*" element={<ErrorComponent />} />
+                </Route>
+              </Routes>
+              <UnsavedChangesNotifier />
+              <DocumentTitleHandler />
+            </Refine>
+          </RefineSnackbarProvider>
+        </ColorModeContextProvider>
+      </BrowserRouter>
     </>
   );
 }

@@ -114,17 +114,19 @@ export const Login: React.FC = () => {
               Login
             </Button>
             <GoogleButton />
-
-            <SignUp isOpened={isOpened} close={setIsOpened} />
-            <PopupBanner
-              isOpened={isLoginFormOpened}
-              close={setisLoginFormOpened}
-            >
-              <p>Heeloo</p>
-            </PopupBanner>
+            {isOpened && (
+              <PopupBanner close={setIsOpened}>
+                <SignUp />
+              </PopupBanner>
+            )}
+            {isLoginFormOpened && (
+              <PopupBanner close={setisLoginFormOpened}>
+                <LoginForm/>
+              </PopupBanner>
+            )}
           </Stack>
         </Box>
-      </Container>
+      </Container>    
     </Box>
   );
 };
