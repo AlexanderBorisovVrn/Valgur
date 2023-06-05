@@ -38,7 +38,7 @@ export const Login: React.FC = () => {
             "573367553697-es3h6ij12egsn73a6lp96q2p1vt6js83.apps.googleusercontent.com",
           callback: async (res: CredentialResponse) => {
             if (res.credential) {
-              login({credential:res.credential,type:'google'});
+              login({ credential: res.credential, type: "google" });
             }
           },
         });
@@ -114,13 +114,15 @@ export const Login: React.FC = () => {
               Login
             </Button>
             <GoogleButton />
+            <PopupBanner isOpened={isOpened} close={setIsOpened}>
+              <SignUp />
+            </PopupBanner>
 
-            <SignUp isOpened={isOpened} close={setIsOpened} />
             <PopupBanner
               isOpened={isLoginFormOpened}
               close={setisLoginFormOpened}
             >
-              <LoginForm/>
+              <LoginForm />
             </PopupBanner>
           </Stack>
         </Box>

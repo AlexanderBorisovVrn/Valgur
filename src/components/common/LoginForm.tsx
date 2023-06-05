@@ -28,6 +28,7 @@ const LoginForm = () => {
   const { mutate: login } = useLogin<CredentialResponse>();
 
   const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     login({ credential: credentials,type:'login'});
   };
   return (

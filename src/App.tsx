@@ -73,7 +73,6 @@ function App() {
           }),
         });
       }
-      console.log(response);
 
       if (response.status === 200) {
         const data = await response.json();
@@ -85,33 +84,27 @@ function App() {
       return Promise.resolve();
     },
 
-    register: ({ credential }) => {
-      fetch("http://localhost:8090/api/v1/users/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credential),
-      })
-        .then((res) => {
-          console.log(res);
-          if (res.status !== 200) {
-            console.log(res);
-            throw new Error("Response status " + res.status);
-          } else {
-            return res.json();
-          }
-        })
-        .then((user) => {
-          console.log(user);
-          localStorage.setItem("user", JSON.stringify(user));
-          localStorage.setItem("token", user.accessToken);
-          return {
-            success: true,
-            redirectTo: "/",
-          };
-        })
-        .catch((e) => console.log("Response status " + e + "."));
+    register: async ({ credential }) => {
+      const response = await fetch(
+        "http://localhost:8090/api/v1/users/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(credential),
+        }
+      );
+
+      if (response.status !== 200) {
+        return Promise.reject();
+      }
+      const user = await response.json();
+      if (user) {
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", user.accessToken);
+      }
+
       return Promise.resolve();
     },
 
