@@ -112,11 +112,11 @@ export function MapSuggest() {
       isOptionEqualToValue={(option, value) => {
         return option.value === value.label;
       }}
-      onChange={(event, newValue: any) => {
+      onChange={async(event, newValue: any) => {
         setOptions(
-          newValue ? [{ label: newValue.value, location: "" }] : options
+          newValue ? [{ label: newValue.value, location:''}] : options
         );
-        setValue(newValue ? [{ label: newValue.value, location: "" }] : null);
+        setValue(newValue ? [{ label: newValue.value, location:'' }] : null);
       }}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);

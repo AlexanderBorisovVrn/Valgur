@@ -52,7 +52,7 @@ export const PropertyDetails: React.FC = () => {
       navigate("/properties/edit/" + id);
     }
   };
-  window.ymaps.geocode(propertyDetails.location).then((res) => console.log());
+
 
   return (
     <Box padding="15px" bgcolor="#fcfcfc" borderRadius="10px" maxWidth='100%'>
@@ -162,7 +162,7 @@ export const PropertyDetails: React.FC = () => {
             width="100%"
             mt={{ xs: "10px", md: "15px" }}
           >
-            <Map location={[54.6345, 32.63]} />
+            <Map location={propertyDetails.location} />
           </Box>
         </Stack>
       </Box>
