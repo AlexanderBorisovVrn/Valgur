@@ -2,9 +2,11 @@ import { Box, Typography, Stack } from '@pankod/refine-mui';
 import { IPieChart } from 'interfaces/chart';
 import ReactApexChart from 'react-apexcharts';
 import { ArrowCircleUpRounded } from '@mui/icons-material';
-import TotalRevenueOptionsHorizontal,{ TotalRevenueOptions, TotalRevenueSeries } from './chart.config';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { getRevenueChartOptions, TotalRevenueSeries } from './chart.config';
 
 const TotalRevenue = () => {
+  const matches = useMediaQuery('(max-width:550px)', { noSsr: true });
   return (
     <Box
       p={4}
@@ -66,7 +68,7 @@ const TotalRevenue = () => {
         series={TotalRevenueSeries}
         type='bar'
         height={310}
-        options={TotalRevenueOptions}
+        options={getRevenueChartOptions(matches)}
       />
     </Box>
   )

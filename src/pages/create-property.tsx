@@ -38,7 +38,6 @@ export const CreateProperty = () => {
 
   const onFinishHandler = async (data: FieldValues) => {
     if (!propertyImage.name) alert("Please, load an image");
-    console.log(data)
     await onFinish({
       ...data,
       location:JSON.stringify(data.location),

@@ -1,4 +1,4 @@
-import {Agents} from './agents'
+import Agents from './agents'
 import  AgentProfile  from './agents-profile'
 import { AllProperties } from './all-properties'
 import { CreateProperty } from './create-property'

@@ -22,9 +22,11 @@ import {
   StarOutlineRounded,
 } from "@mui/icons-material";
 import Pages from "pages";
+import { Suspense, lazy } from "react";
+import Spinner from "components/common/Spinner";
 const {
   Home,
-  Agents,
+
   AgentProfile,
   AllProperties,
   CreateProperty,
@@ -33,7 +35,7 @@ const {
   MyProfile,
   PropertyDetails,
 } = Pages;
-
+const Agents = lazy(() => import("./pages/agents"));
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((request: AxiosRequestConfig) => {
   const token = localStorage.getItem("token");
@@ -171,7 +173,11 @@ function App() {
               },
               {
                 name: "agents",
-                list: Agents,
+                list: () => (
+                  <Suspense fallback={<div>Loading</div>}>
+                    <Agents />
+                  </Suspense>
+                ),
                 show: AgentProfile,
                 icon: <PeopleAltOutlined />,
               },

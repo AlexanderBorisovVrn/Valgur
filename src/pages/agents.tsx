@@ -4,9 +4,9 @@ import { Box, Typography, Grid, Stack } from "@pankod/refine-mui";
 import { IAgentCardProp } from "interfaces/agent";
 import { lazy, Suspense } from "react";
 
-const AgentCard = lazy(() => import("../components/agent/AgentCard"));
+import { AgentCard } from "components";
 
-export const Agents = () => {
+ const Agents = () => {
   const { data, isLoading, isError } = useList({ resource: "users" });
   if (isLoading) {
     return <Typography>Loading</Typography>;
@@ -34,3 +34,4 @@ export const Agents = () => {
     </Box>
   );
 };
+export default Agents
