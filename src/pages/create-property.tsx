@@ -5,7 +5,6 @@ import {
   useForm,
   FormProvider,
 } from "@pankod/refine-react-hook-form";
-import { useNavigate } from "@pankod/refine-react-router-v6";
 import { loadCompressedImg } from "utils/loadCompressedImg";
 import Form from "components/common/Form";
 import { PropertyImageProps } from "interfaces/properties";

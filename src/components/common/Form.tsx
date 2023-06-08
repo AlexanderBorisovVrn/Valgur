@@ -54,10 +54,9 @@ const Form: FC<IForm> = ({
             <TextField
               fullWidth
               required
-              id="outlined-basic"
+              data-testid="property-name"
               color="info"
               variant="outlined"
-              autoComplete="hello"
               {...register("title", {
                 required: true,
               })}
@@ -78,6 +77,7 @@ const Form: FC<IForm> = ({
               minRows={6}
               required
               placeholder="Write a description"
+              data-testid="property-description"
               style={{
                 width: "100%",
                 background: "transparent",
@@ -109,8 +109,9 @@ const Form: FC<IForm> = ({
                 color="info"
                 required
                 displayEmpty
+                data-testid="property-type"
                 inputProps={{
-                  "aria-label": "Without label",
+                  "aria-label": "none",
                 }}
                 defaultValue="apartment"
                 {...register("propertyType", {
@@ -143,7 +144,8 @@ const Form: FC<IForm> = ({
                 fullWidth
                 required
                 type="number"
-                id="outlined-basic"
+                aria-label="Price"
+                data-testid="property-price"
                 color="info"
                 variant="outlined"
                 autoComplete="hello"
@@ -167,6 +169,7 @@ const Form: FC<IForm> = ({
               </Typography>
               <Button
                 component="label"
+                data-testid = 'upload-button'
                 sx={{
                   width: "fit-content",
                   color: "#2ed480",
@@ -179,6 +182,7 @@ const Form: FC<IForm> = ({
                   hidden
                   accept="image/*"
                   type="file"
+                  data-testid = 'upload-input'
                   onChange={(e) => {
                     //@ts-ignore
                     handleImageChange(e.target.files[0]);
