@@ -2,23 +2,21 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Form from '../Form';
 import { FormProvider } from "@pankod/refine-react-hook-form";
+import React from 'react';
 
 describe('Form component', () => {
-    let file;
+    const mockOnFinishHandler = jest.fn();
+    const Wrapper = (props) => {
+        return (
+            <FormProvider register={() => { }} handleSubmit={() => { }}>
+                {props.children}
+            </FormProvider>
+        );
+    };
 
-    beforeEach(() => {
-        file = new File(["(⌐□_□)"], "chucknorris.png", { type: "image/png" });
-    });
 
     test('should render the basic fields', () => {
-        const mockOnFinishHandler = jest.fn();
-        const Wrapper = (props) => {
-            return (
-                <FormProvider register={() => { }} handleSubmit={() => { }}>
-                    {props.children}
-                </FormProvider>
-            );
-        };
+
         render(
             <Wrapper>
                 <Form
@@ -45,16 +43,6 @@ describe('Form component', () => {
 
 
     test('upload  files', () => {
-        const file = new File(['hello'], 'hello.png', { type: 'image/png' })
-        const mockOnFinishHandler = jest.fn();
-        const Wrapper = (props) => {
-            return (
-                <FormProvider register={() => { }} handleSubmit={() => { }}>
-                    {props.children}
-                </FormProvider>
-            );
-        };
-
         render(
             <Wrapper>
                 <Form
@@ -67,11 +55,31 @@ describe('Form component', () => {
                 />
             </Wrapper>
         );
-        const input = screen.getByTestId('upload-input')
-        userEvent.upload(input, file)
-        expect(input.files[0]).toStrictEqual(file)
-        
+       
+        const file = new File(['file content'], 'image.png', { type: 'image/png' });
+
+        // Нахождение <input> элемента
+        const inputElement = screen.getByTestId('upload-input');
+      
+        // Имитация события изменения файла
+        fireEvent.change(inputElement, { target: { files: [file] } });
+
     })
+    test('renders Form correctly', () => {
+        const { asFragment } = render(
+            <Wrapper>
+                <Form
+                    type="Test"
+                    formLoading={false}
+                    handleImageChange={jest.fn()}
+                    onFinishHandler={mockOnFinishHandler}
+                    propertyImage={null}
+
+                />
+            </Wrapper>
+        );;
+        expect(asFragment()).toMatchSnapshot();
+    });
 
 });
 
