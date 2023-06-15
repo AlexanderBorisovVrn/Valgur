@@ -8,7 +8,6 @@ const PieChart = ({ title, value, series, colors }: IPieChart) => {
   return (
     <Box
     id='chart'
-    flex={1}
     display='flex'
     bgcolor='#fcfcfc'
     flexDirection ='row'
@@ -16,10 +15,10 @@ const PieChart = ({ title, value, series, colors }: IPieChart) => {
     alignItems='center'
     pl={3.5}
     py={2}
-    gap={2}
+    gap={{xs:'1',md:'2'}}
     borderRadius='15px'
     minHeight='110px'
-    width='fit-content'
+    width={{xs:'100%',sm:'calc(100% / 2 - 40px)',lg:'calc(100% / 4 - 25px)'}}
 
     >
       <Stack direction='column'>

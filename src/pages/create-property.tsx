@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useGetIdentity } from "@pankod/refine-core";
 import {
   FieldValues,
   useForm,
   FormProvider,
 } from "@pankod/refine-react-hook-form";
-import { useNavigate } from "@pankod/refine-react-router-v6";
 import { loadCompressedImg } from "utils/loadCompressedImg";
 import Form from "components/common/Form";
 import { PropertyImageProps } from "interfaces/properties";
@@ -19,10 +18,10 @@ export const CreateProperty = () => {
   });
   const {
     refineCore: { onFinish, formLoading },
-  ...methods
+    ...methods
   } = useForm();
 
-  const handleImageChange = (file: FileType) => {
+  const handleImageChange = useCallback((file: FileType) => {
     if (!file) {
       setPropertyImage({ name: "", url: "" });
       return;
@@ -34,17 +33,17 @@ export const CreateProperty = () => {
         url: img as string,
       })
     );
-  };
+  }, []);
 
-  const onFinishHandler = async (data: FieldValues) => {
+  const onFinishHandler = useCallback(async (data: FieldValues) => {
     if (!propertyImage.name) alert("Please, load an image");
     await onFinish({
       ...data,
-      location:JSON.stringify(data.location),
+      location: JSON.stringify(data.location),
       photo: propertyImage.url,
       email: user.email,
     });
-  };
+  }, [propertyImage]);
 
   return (
     <FormProvider {...methods}>

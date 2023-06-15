@@ -16,12 +16,14 @@ export const Home: FC = () => {
       </Typography>
       <Box
         mt="20px"
+        padding='0 5px'
         display="flex"
         alignItems={{xs:'center'}}
         justifyContent={{ xs: "center", md: "space-between" }}
-        flexDirection={{ xs: "column", md: "row" }}
+        flexDirection={{ xs: "column", sm: "row" }}
         flexWrap="wrap"
         gap={4}
+        width='100%'
       >
         <PieChart
           title="Properties for sales"

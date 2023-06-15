@@ -18,7 +18,6 @@ const imgCompressOpt = {
 };
 
 export const EditProperty = () => {
-  const navigate = useNavigate();
   const { data: user } = useGetIdentity();
   const [propertyImage, setPropertyImage] = useState<PropertyImageProps>({
     name: "",
